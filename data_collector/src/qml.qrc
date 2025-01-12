@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qtquickcontrols2.conf</file>
+        <file>data_collector/views/main.qml</file>
+        <file>data_collector/views/remote_view.qml</file>
+    </qresource>
+</RCC>

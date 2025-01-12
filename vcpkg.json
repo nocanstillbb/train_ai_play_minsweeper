@@ -1,0 +1,20 @@
+{
+    "name": "train-ai-play-minsweeper",
+    "version": "1.0.0",
+    "dependencies": [
+        "fmt",
+        "catch2",
+        "sqlite3",
+        "zlib",
+        "opencv4",
+        "opencv"
+    ],
+    "builtin-baseline":"e60236ee051183f1122066bee8c54a0b47c43a60",
+    "overrides": [
+        {
+            "name": "catch2",
+            "version": "3.4.0"
+        }
+    ]
+}
+
