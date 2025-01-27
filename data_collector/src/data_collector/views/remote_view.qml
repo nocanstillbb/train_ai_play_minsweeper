@@ -18,13 +18,43 @@ Rectangle {
     color: "lightblue"
     property var vm:Remote_viewmodel
     ColumnLayout{
+        spacing: 0
         anchors.fill: parent
-
-
         VncItem{
             id:vncview
             Layout.fillHeight: true
             Layout.fillWidth: true
+            property string pre_datetime :""
+            property var rect:  Qt.rect(36  , 250 , 850-36*2-1 , 850-250-185)
+            property real pre_x
+            property real pre_y
+            onPreviewMousePress:function(e,img)
+            {
+
+                if(vncview.pre_datetime!="")
+                {
+                    //let content = qsTr('{"x":%1,"y":%2}')
+                    //                              .arg(pre_x)
+                    //                              .arg(pre_y)
+                    //CppUtility.createFileAndWrite("data/"+vncview.pre_datetime+".josn",content);
+
+                    vm.saveClickPosLabel("./data/"+vncview.pre_datetime+"_label_action.josn",pre_x,pre_y,26);
+
+                }
+
+                let datetime = JsEx.currentDateTimeZZZString()
+                vm.save(img,CppUtility.getAppBaseDir()+ "/data/"+datetime,rect,false)
+
+                vncview.pre_datetime = datetime
+                vncview.pre_x = (e.x * vncview.frameBufferWidth / vncview.width) - rect.x
+                vncview.pre_y =(e.y * vncview.frameBufferHeight / vncview.height) - rect.y
+            }
+
+            onMouseRelease:function(e,img)
+            {
+
+            }
+
         }
         RowLayout{
             Layout.fillWidth: true
@@ -42,7 +72,7 @@ Rectangle {
             }
             Q1.TextField{
                 id:tb_port
-                text: "5900"
+                text: "5901"
             }
             Item {
                 Layout.fillWidth: true
@@ -50,7 +80,7 @@ Rectangle {
             Q1.Button{
                 text: "连接"
                 onClicked: {
-                    vncview.connectToVncServer(tb_ip.text,"123456",tb_port.text)
+                    vncview.connectToVncServer(tb_ip.text,"aaaaaaaa",tb_port.text)
                 }
             }
             Q1.Button{

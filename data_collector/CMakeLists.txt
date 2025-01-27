@@ -12,19 +12,18 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core LinguistTools)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Gui Widgets Quick Qml QuickControls2 )
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Gui Widgets Quick Qml QuickControls2 Concurrent)
 #find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Gui Widgets Quick Qml QuickControls2 LinguistTools Sql SerialBus)
 
 find_package(prism COMPONENTS container qt::modular qt::core qt::ui)
-
-#set(OpenCV_DIR "${VCPKG_INSTALLED_DIR}/x64-osx/share/opencv4")
-
-find_package(OpenCV REQUIRED)
+find_package(OpenCV CONFIG REQUIRED)
 
 set(PROJECT_SOURCES
         src/main.cpp
         src/qml.qrc
         src/viewmodels/remote_viewmodel.cpp
+
+        models/label.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -50,6 +49,7 @@ else()
     endif()
 endif()
 
+message(STATUS "Available OpenCV components: ${OpenCV_LIBS}")
 target_compile_definitions(data_collector
   PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
 target_link_libraries(data_collector PRIVATE
@@ -58,12 +58,17 @@ target_link_libraries(data_collector PRIVATE
     prism::qt::modular
     prism::qt::core
     prism::qt::ui
-Qt${QT_VERSION_MAJOR}::Core
-Qt${QT_VERSION_MAJOR}::Gui
-Qt${QT_VERSION_MAJOR}::Widgets
-Qt${QT_VERSION_MAJOR}::Quick
-Qt${QT_VERSION_MAJOR}::Qml
-Qt${QT_VERSION_MAJOR}::QuickControls2)
+
+    opencv_core
+    opencv_imgcodecs
+
+    Qt${QT_VERSION_MAJOR}::Concurrent
+    Qt${QT_VERSION_MAJOR}::Core
+    Qt${QT_VERSION_MAJOR}::Gui
+    Qt${QT_VERSION_MAJOR}::Widgets
+    Qt${QT_VERSION_MAJOR}::Quick
+    Qt${QT_VERSION_MAJOR}::Qml
+    Qt${QT_VERSION_MAJOR}::QuickControls2)
 
 
 set_target_properties(data_collector PROPERTIES

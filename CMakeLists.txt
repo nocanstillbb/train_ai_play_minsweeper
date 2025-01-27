@@ -9,10 +9,14 @@ option(BUILD_DATA_COLLECTOR "data_collector" ON)
 
 
 
+set(Protobuf_PROTOC_EXECUTABLE vcpkg_installed//x64-osx/tools/protobuf/protoc)
 
 
 set(USING_PRISM_QT_UI_VNCITEM ON)
 add_compile_definitions(USING_PRISM_QT_UI_VNCITEM)
+
+set(USING_PRISM_QT_UI_VNCITEM_IGNORE_SET_PIXEL ON)
+add_compile_definitions(USING_PRISM_QT_UI_VNCITEM_IGNORE_SET_PIXEL)
 
 
 if(BUILD_DATA_COLLECTOR)
