@@ -3,3 +3,4 @@ vcpkg_installed
 *.user
 *.autosave
 **/.DS_Store
+pytorch
