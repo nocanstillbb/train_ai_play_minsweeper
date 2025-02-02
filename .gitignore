@@ -4,3 +4,5 @@ vcpkg_installed
 *.autosave
 **/.DS_Store
 pytorch
+.0.swp
+**/__pycache__

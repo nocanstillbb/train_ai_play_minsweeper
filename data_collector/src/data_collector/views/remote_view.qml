@@ -25,7 +25,8 @@ Rectangle {
             Layout.fillHeight: true
             Layout.fillWidth: true
             property string pre_datetime :""
-            property var rect:  Qt.rect(36  , 250 , 850-36*2-1 , 850-250-185)
+            //property var rect:  Qt.rect(0,0,850,850) //截全图用photoshop查看每格间距26像素
+            property var rect:  Qt.rect(36,255,780,416) //截全图用photoshop查看每格间距26像素
             property real pre_x
             property real pre_y
             onPreviewMousePress:function(e,img)
@@ -38,7 +39,7 @@ Rectangle {
                     //                              .arg(pre_y)
                     //CppUtility.createFileAndWrite("data/"+vncview.pre_datetime+".josn",content);
 
-                    vm.saveClickPosLabel("./data/"+vncview.pre_datetime+"_label_action.josn",pre_x,pre_y,26);
+                    vm.saveClickPosLabel("./data/"+vncview.pre_datetime+".label_action",pre_x,pre_y,26);
 
                 }
 
@@ -73,6 +74,12 @@ Rectangle {
             Q1.TextField{
                 id:tb_port
                 text: "5901"
+            }
+            Q1.CheckBox{
+                text: "保存单元格图片"
+                onClicked: {
+                    vm.saveCellImages = checked
+                }
             }
             Item {
                 Layout.fillWidth: true

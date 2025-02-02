@@ -4,6 +4,7 @@
 #include <QtConcurrent>
 #include <prism/qt/ui/helper/cpp_utility.h>
 #include <prism/container.hpp>
+#include <QPainter>
 #include <sstream>
 
 
@@ -18,7 +19,10 @@ Remote_viewmodel::Remote_viewmodel(QObject *parent) : QObject(parent)
 
 }
 
+//#define COLLECT_MOCK_DATA
+
 //#define COLLECT_DATA
+
 void Remote_viewmodel::save(QImage *img, const QString &filePath, const QRect &rect, const bool &async)
 {
     QFileInfo fileInfo(filePath);
@@ -34,7 +38,6 @@ void Remote_viewmodel::save(QImage *img, const QString &filePath, const QRect &r
     {
         auto lambda = [=](){
             auto imgcopy = img->copy(rect);
-            imgcopy.save(filePath+".png");
 
 #ifdef COLLECT_DATA
             //仅在调试时保存图片查看
@@ -48,16 +51,77 @@ void Remote_viewmodel::save(QImage *img, const QString &filePath, const QRect &r
 
 
             StatusLabel label;
+            static bool genMouse = true;
+            //genMouse^=true;
 
             for(int row=0;row<16;++row)
             {
                 for(int col = 0;col<30;++col)
                 {
                     QRect clip_cell;
-                    clip_cell.setX(col*26 + 3);
-                    clip_cell.setY(row*26 + 2);
-                    clip_cell.setWidth(20);
-                    clip_cell.setHeight(20);
+                    clip_cell.setX(col*26 );
+                    clip_cell.setY(row*26 );
+                    clip_cell.setWidth(26);
+                    clip_cell.setHeight(26);
+
+#ifdef COLLECT_MOCK_DATA
+                    QPainter spainter(&imgcopy);
+                    //spainter.setRenderHint(QPainter::SmoothPixmapTransform);
+
+                    static std::map<int,QImage> template_images;
+                    // 创建随机数引擎
+                    std::random_device rd;  // 真实随机种子
+                    std::mt19937 gen(rd()); // 生成器（Mersenne Twister 19937）
+                    //替换单元格
+                    {
+                        if(!template_images.size())
+                        {
+                            for(int i = 0 ; i< 14; ++i)
+                            {
+                                // -1 ... 12
+                                QString templete_path = QString("./resources/%1.png").arg(i-1);
+                                QImage image(templete_path);
+                                image = image.convertToFormat(QImage::Format_RGB888);
+                                template_images[i-1] = image;
+                            }
+                        }
+
+
+                        // 生成 [-1, 12] 范围的整数
+                        std::uniform_int_distribution<int> dist(-1,12);
+
+                        // 生成并输出一个随机数
+                        int random_number = dist(gen);
+
+                        label.minsRows[row][col] = random_number;
+
+                        QImage cellClone = template_images[random_number].copy();
+                        if(genMouse)
+                        {
+                            // 创建随机数引擎
+                            static QImage mouse("./resources/mouse.png");
+                            QPainter tpainter(&cellClone);
+                            QPoint cursorPos;
+                            {
+                                std::uniform_int_distribution<int> x(-12,38);
+                                std::uniform_int_distribution<int> y(-12,38);
+                                cursorPos.setX(x(gen));
+                                cursorPos.setY(y(gen));
+                            }
+                            tpainter.drawImage(cursorPos, mouse);
+                            tpainter.end();
+                        }
+
+                        spainter.drawImage(clip_cell.x() , clip_cell.y() , cellClone);
+
+
+                    }
+
+
+
+                    spainter.end();
+
+#endif
 
 
 
@@ -74,6 +138,7 @@ void Remote_viewmodel::save(QImage *img, const QString &filePath, const QRect &r
 
 
 #ifndef COLLECT_DATA
+#ifndef  COLLECT_MOCK_DATA
                     //匹配,计算最匹配的格式名称
                     QImage cell_img = imgcopy.copy(clip_cell);
                     cv::Mat cell_mat = QImageToCvMat(cell_img);
@@ -96,10 +161,15 @@ void Remote_viewmodel::save(QImage *img, const QString &filePath, const QRect &r
                     }
                     label.minsRows[row][col] = bestIndex;
 #endif
+#endif
 
                 }
 
             }
+
+
+
+
 
 #ifndef COLLECT_DATA
             for(const auto& row : label.minsRows)
@@ -111,7 +181,7 @@ void Remote_viewmodel::save(QImage *img, const QString &filePath, const QRect &r
                 std::cout << std::endl;
             }
 
-            QString labelPath = filePath + "_label_status.json";
+            QString labelPath = filePath + ".label_status";
             QFile file(labelPath);
             if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
                 QTextStream out(&file);
@@ -121,9 +191,10 @@ void Remote_viewmodel::save(QImage *img, const QString &filePath, const QRect &r
                 qWarning() << "无法打开文件:" << file.errorString();
             }
 
-
-
 #endif
+            //保存大图
+            imgcopy.save(filePath+".jpg");
+
 
         };
         if(async)
@@ -191,6 +262,8 @@ void Remote_viewmodel::loadResources()
     for(const QFileInfo& info : dir.entryInfoList(QDir::Files|QDir::NoDotAndDotDot))
     {
 
+        if(info.baseName().startsWith("mouse"))
+            continue;
         cv::Mat image = imread(info.absoluteFilePath().toStdString(), cv::IMREAD_COLOR);
         qDebug() << "iamge path:" << info.absoluteFilePath() << "    image size:" << image.rows << "x" << image.cols;
 

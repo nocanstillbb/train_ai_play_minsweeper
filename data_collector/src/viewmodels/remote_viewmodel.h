@@ -12,6 +12,8 @@ class Remote_viewmodel : public QObject
 public:
     explicit Remote_viewmodel(QObject *parent = nullptr);
 
+
+
 public slots:
 
     void save(QImage* img,const QString &filePath, const QRect &rect,const bool& async);
@@ -23,6 +25,7 @@ private: //mehtods
 
 private://fields
     std::map<int,cv::Mat> resources_;
+
 
 signals:
 
