@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qtquickcontrols2.conf</file>
+        <file>rl_gameAgent/views/main.qml</file>
+        <file>rl_gameAgent/views/remote_view.qml</file>
+    </qresource>
+</RCC>

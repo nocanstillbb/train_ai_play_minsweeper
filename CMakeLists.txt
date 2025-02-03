@@ -6,6 +6,7 @@ project(train_ai_play_minsweeper VERSION 1.0.0)
 
 option(BUILD_PRISM_ALL "BUILD_PRISM_ALL" ON)
 option(BUILD_DATA_COLLECTOR "data_collector" ON)
+option(BUILD_RL_GAMEAGENT "rl_gameAgent" ON)
 
 
 
@@ -20,10 +21,13 @@ set(USING_PRISM_QT_UI_VNCITEM_IGNORE_SET_PIXEL ON)
 add_compile_definitions(USING_PRISM_QT_UI_VNCITEM_IGNORE_SET_PIXEL)
 
 
-if(BUILD_DATA_COLLECTOR)
+if(BUILD_PRISM_ALL)
     add_subdirectory(third-party/prism_all)
 endif()
-if(BUILD_PRISM_ALL)
+if(BUILD_DATA_COLLECTOR)
     add_subdirectory(data_collector)
 endif()
 
+if(BUILD_RL_GAMEAGENT)
+    add_subdirectory(rl_gameAgent)
+endif()

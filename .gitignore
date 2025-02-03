@@ -1,8 +1,8 @@
 build
-vcpkg_installed
+vcpkg_installed**
 *.user
 *.autosave
 **/.DS_Store
-pytorch
+env_pytorch
 .0.swp
 **/__pycache__
