@@ -2,9 +2,10 @@
 set -x
 
 currentpath=$(pwd)
-project_install_dir=$currentpath/vcpkg_installed/x64-osx
-qt_install_dir=/Users/hbb/Qt/5.15.2/clang_64
-cmake_paramter="-DCMAKE_PREFIX_PATH=$qt_install_dir;$project_install_dir -DCMAKE_INSTALL_PREFIX=$project_install_dir  -DCMAKE_TOOLCHAIN_FILE=/Users/hbb/toolchain-x64.cmake -DBUILD_PRISM_ALL=OFF"
+project_install_dir=$currentpath/vcpkg_installed/arm64-osx
+#qt_install_dir=/Users/hbb/Qt/5.15.2/clang_64
+#qt_install_dir=/Users/hbb/Qt/5.15.2/clang_64
+cmake_paramter="-DCMAKE_PREFIX_PATH=;$project_install_dir -DCMAKE_INSTALL_PREFIX=$project_install_dir  -DCMAKE_TOOLCHAIN_FILE=/Users/hbb/toolchain-arm64.cmake -DBUILD_PRISM_ALL=OFF"
 
 
 cd $currentpath/third-party/prism_all

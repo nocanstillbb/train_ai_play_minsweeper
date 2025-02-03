@@ -9,7 +9,8 @@ option(BUILD_DATA_COLLECTOR "data_collector" ON)
 
 
 
-set(Protobuf_PROTOC_EXECUTABLE vcpkg_installed//x64-osx/tools/protobuf/protoc)
+set(Protobuf_PROTOC_EXECUTABLE vcpkg_installed//arm64-osx/tools/protobuf/protoc)
+set(Torch_DIR /Users/hbb/source/repos/train_ai_play_minsweeper/env_pytorch/lib/python3.12/site-packages/torch/share/cmake/Torch)
 
 
 set(USING_PRISM_QT_UI_VNCITEM ON)

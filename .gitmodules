@@ -1,3 +1,6 @@
 [submodule "third-party/prism_all"]
 	path = third-party/prism_all
 	url = git@github.com:cpp-prism/prism_all.git
+[submodule "third-party/pytorch"]
+	path = third-party/pytorch
+	url = git@github.com:pytorch/pytorch.git

@@ -2,6 +2,7 @@
     "name": "train-ai-play-minsweeper",
     "version": "1.0.0",
     "dependencies": [
+        "qt5",
         "fmt",
         "catch2",
         "sqlite3",
