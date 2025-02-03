@@ -14,7 +14,7 @@ from torch.utils.data import DataLoader, TensorDataset
 
 # 定义超参数
 batch_size = 32 
-num_epochs = 1000
+num_epochs = 1
 learning_rate_0 = 0.0001
 learning_rate_1 = 0.0001
 data_dir = "/Users/hbb/source/repos/train_ai_play_minsweeper/build/data_collector/data_train"
@@ -110,10 +110,15 @@ def load_data(data_dir):
     
     return torch.stack(image_tensors), torch.stack(label_tensors)
 
+
+
+device = torch.device("mps")
+
+
+
 # Example usage
 image_tensors, label_tensors = load_data(data_dir)
 
-device = torch.device("mps")
 image_tensors = image_tensors.to(device)
 label_tensors = label_tensors.to(device)
 
@@ -121,7 +126,6 @@ print(f"Image tensors shape: {image_tensors.shape}")  # Should be (N, 3, 256, 48
 print(f"Label tensors shape: {label_tensors.shape}")  # Should be (N, 16, 30, 10)
 print(f"Image tensor type: {image_tensors.dtype}, device: {image_tensors.device}")
 print(f"Label tensor type: {label_tensors.dtype}, device: {label_tensors.device}")
-
 
 
 
@@ -233,4 +237,9 @@ for epoch in range(num_epochs):
 
     torch.save(model.state_dict(),f"epo{epoch}_acc{correct / total:.4f}model.pt")
 
+
+# 直接转换为 TorchScript
+scripted_model = torch.jit.script(model)
+# 保存为 JIT 模型
+scripted_model.save("model_scripted.pt")
 
